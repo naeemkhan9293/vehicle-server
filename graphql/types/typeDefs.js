@@ -1,5 +1,5 @@
 export const typeDefs = `#graphql
-
+  # ----------------types-------------------
   type StandardFeatures {
     POWERSTEERING: Boolean
     POWERWINDOW: Boolean
@@ -48,36 +48,65 @@ export const typeDefs = `#graphql
 
   type Vehicle {
     id: ID!
-    make: String!
-    model: String!
-    year: Int!
-    transmission: String!
-    engine: String!
-    fuelType: String!
-    price: Float!
-    condition: String!
-    location: String!
-    Chassis: String!
-    Mileage: String!
-    Model: String!
-    Steering: String!
-    EngineCapacity: String!
-    EngineCode: String!
-    DriveType: String!
-    Color: String!
-    Transmission: String!
-    InteriorColor: String!
-    RegYearMonth: String!
-    FuelType: String!
-    Port: String!
-    Seats: String!
-    SaleLocation: String!
-    Doors: String!
-    GradeClass: String!
-    StandardFeatures: StandardFeatures
+    make: String!,
+    model: String!,
+    year: String!,
+    transmission: String!,
+    engine: String!,
+    fuelType: String!,
+    price: String!,
+    condition: String!,
+    location: String!,
+    regYearMonth: String!,
+    chassis: String!,
+    color: String!,
+    doors: String!,
+    driveType: String!,
+    engineCapacity: String!,
+    engineCode: String!,
+    gradeClass: String!,
+    interiorColor: String!,
+    mileAge: String!,
+    port: String!,
+    saleLocation: String!,
+    seats: String!,
+    steering: String!,
+    StandardFeatures:StandardFeatures
     images:[String]!
   }
 
+  type Makes {
+    make:String!
+    model:[String!]
+  }
+
+  type MakesObj{
+    location:[String!]
+    transmission:[String!]
+    fuelType:[String!]
+    makes:[Makes]!
+  }
+
+  type ReturnFilter {
+    make:[String!]
+    model:[String!]
+    transmission:[String!]
+    fuelType:[String!]
+    location:[String!]
+  }
+
+  type Token{
+    token:String!
+  }
+
+  type User{
+    username:String!
+    email:String!
+    phone:String!
+    profileImage:String
+  }
+
+  # ----------------inputs-------------------
   input StandardFeaturesInput {
     POWERSTEERING: Boolean
     POWERWINDOW: Boolean
@@ -124,19 +153,6 @@ export const typeDefs = `#graphql
     CLIMATECONTROL: Boolean
   }
 
-
-  type Makes {
-    make:String!
-    model:[String!]
-  }
-
-  type MakesObj{
-    location:[String!]
-    transmission:[String!]
-    fuelType:[String!]
-    makes:[Makes]!
-  }
-
   input FilterInput {
     make: String
     model: String
@@ -148,21 +164,29 @@ export const typeDefs = `#graphql
     price: Float
     location: String
   }
-  
-  type ReturnFilter {
-    make:[String!]
-    model:[String!]
-    transmission:[String!]
-    fuelType:[String!]
-    location:[String!]
+
+  input RegisterUser {
+    username: String!
+    password: String!
+    email: String!
+    phone:String!
+  }
+
+  input LoginUser {
+    email:String!
+    password:String!
   }
 
   type Query {
-    getVehicles:[Vehicle]!
     getVehicle(vehicleId:ID!):Vehicle!
     getFilterData:ReturnFilter!
     getMakes:MakesObj
     filterQuery(filter:FilterInput, skip:Int!):[Vehicle]!
+    getUser:User!
   }
-  
+
+  type Mutation {
+    registerUser(registeruser: RegisterUser!): String!
+    loginUser(loginuser:LoginUser!):Token!
+  }
 `;

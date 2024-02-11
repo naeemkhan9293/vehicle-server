@@ -10,6 +10,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { connectMongo } from "./db/db.js";
 import { typeDefs } from "./graphql/types/typeDefs.js";
 import { resolvers } from "./graphql/resolvers/index.js";
+import userFileUpload from "./router/userFileUpload.js";
 
 // ----------------------------------
 await connectMongo();
@@ -26,23 +27,27 @@ const server = new ApolloServer({
 
 await server.start();
 
-// app.use("/images", static_("public/images/user"));
 app.use("/images/vehicle", static_("public/images/vehicle"));
+app.use(
+  "/images/user-profile-images",
+  static_("public/images/user-profile-images")
+);
 
-// app.use(cors(), bodyParser.json(), expressMiddleware(server));
+app.use(
+  cors()
+);
+app.use(bodyParser.json());
+app.use(userFileUpload);
 
-// app.use(
-//   cors({
-//     origin: ["https://c2b6jtbx-3000.inc1.devtunnels.ms", "http://localhost:3000/"],
-//     credentials: true,
-//   }),
-//   bodyParser.json(),
-//   expressMiddleware(server)
-// );
-app.use(cors(), bodyParser.json(), expressMiddleware(server));
+app.use(
+  "/graphql",
+  expressMiddleware(server, {
+    context: async ({ req }) => ({ req }),
+  })
+);
 
-// app.use(bodyParser.json());
-
-httpServer.listen(port, () => {
-  console.log(`🚀 Server ready at http://localhost:${port}`);
-});
+// httpServer.listen(port,() => {
+//   console.log(`🚀 Server ready at http://localhost:${port}`);
+// },);
+await new Promise((resolve) => httpServer.listen({ port: port }, resolve));
+console.log(`🚀 Server ready at http://localhost:4000/graphql`);

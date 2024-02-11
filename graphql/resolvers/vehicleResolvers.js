@@ -4,17 +4,15 @@ export const vehicleQuery = {
   //--------Get single vehicle -----------------
   async getVehicle(_, { vehicleId }) {
     try {
-      return await vehicle.findById(vehicleId);
+      const vehicles = await vehicle.findById(vehicleId);
+      return vehicles;
     } catch (error) {
+      console.log(error);
       throw new Error("Failed to fetch vehicle");
     }
   },
 
-  //--------Get all vehicle -----------------
-
-  async getVehicles() {
-    return await vehicle.find().limit(20);
-  },
+ 
 
   //--------Get all makes -----------------
   async getMakes() {
@@ -63,11 +61,10 @@ export const vehicleQuery = {
 
   async filterQuery(_, { filter, skip }) {
     try {
-      const result = await vehicle.find(filter).skip(skip).limit(4);
+      const result = await vehicle.find(filter).skip(skip).limit(7);
       // Ensure that the result is an array
       return Array.isArray(result) ? result : [];
     } catch (error) {
-      console.error("Error:", error);
       throw new Error("Internal Server Error");
     }
   },
